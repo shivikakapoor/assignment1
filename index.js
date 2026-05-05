@@ -36,9 +36,10 @@ app.use(session({
     collectionName: 'sessions'
   }),
   cookie: { maxAge: 60 * 60 * 1000 }
+  // runs 1 hours
 }));
 
-// Home
+//home
 app.get('/', (req, res) => {
   if (req.session.user) {
     res.send(`
@@ -55,7 +56,7 @@ app.get('/', (req, res) => {
   }
 });
 
-// Signup GET
+// signup get
 app.get('/signup', (req, res) => {
   res.send(`
     <h2>create user</h2>
@@ -68,7 +69,7 @@ app.get('/signup', (req, res) => {
   `);
 });
 
-// Signup POST
+// sign post
 app.post('/signupSubmit', async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -112,17 +113,17 @@ app.post('/loginSubmit', async (req, res) => {
 
   const { error } = schema.validate({ email, password });
   if (error) {
-    return res.send(`<p>Invalid input.</p><a href="/login">Try again</a>`);
+    return res.send(`<p>invalid .</p><a href="/login">Try again</a>`);
   }
 
   const user = await userCollection.findOne({ email });
   if (!user) {
-    return res.send(`<p>Invalid email/password combination.</p><a href="/login">Try again</a>`);
+    return res.send(`<p>invalid password and email.</p><a href="/login">Try again</a>`);
   }
 
-  const match = await bcrypt.compare(password, user.password);
+  const match = await bcrypt.compare(password, user.password); 
   if (!match) {
-    return res.send(`<p>Invalid email/password combination.</p><a href="/login">Try again</a>`);
+    return res.send(`<p>invalid password and email.</p><a href="/login">Try again</a>`);
   }
 
   req.session.user = { name: user.name, email: user.email };
